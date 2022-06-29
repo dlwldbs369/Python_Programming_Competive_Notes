@@ -97,9 +97,12 @@ print(min(5, 12)) # 5
 print(round(3.14)) # 3
 print(round(4.88)) # 5
 
+import imp
 from math import *
 from tkinter.font import names
-from tkinter.tix import Balloon # math 모듈 안에 있는 것을 모두 쓰겠다.
+from tkinter.tix import Balloon
+
+from travel import thailand # math 모듈 안에 있는 것을 모두 쓰겠다.
 
 print(floor(4.66)) # 4 내림
 print(ceil(3.14)) # 4 올림
@@ -1018,3 +1021,142 @@ battlecruiser.move(battlecruiser.name, "9시")
 
 # pass
 # 건물
+class BuildingUnit(Unit):
+    def __init__(self, name, hp, location):
+        pass # 아무것도 안하고 일단 넘어간다.
+    
+# 서플라이 디폿 : 건물 1개 건물 = 8 유닛.
+supply_depot = BuildingUnit("서플라이 디폿", 500, "7시")
+
+def game_start():
+    print("[알림] 새로운 게임을 시작합니다.")
+    
+def game_over():
+    pass 
+
+game_start()
+game_over()
+
+# super 
+class BuildingUnit(Unit):
+    def __init__(self, name, hp, location):
+        #Unit.__init__(self, name, hp, 0)
+        super().__init__(name, hp, 0)
+        # 상속과 super()의 작성 차이
+        self.location = location
+    
+    
+# 중간 Quiz
+'''
+    주어진 코드를 활용하여 부동산 프로그램을 작성하시오.
+    
+    (출력 예제)
+    총 3대의 매물이 있습니다.
+    강남 아파트 매매 10억 2010년
+    마포 오피스텔 전세 5억 2007년
+    송파 빌라 월세 500/50 2000년
+    
+'''
+class House:
+    # 매물 초기화
+    def __init__(self, location, house_type, deal_type, price, completion_year):
+        self.location = location
+        self.house_type = house_type
+        self.deal_type = deal_type
+        self.price = price
+        self.completion_year = completion_year
+    
+    # 매물 정보 표시
+    def show_detail(self):
+        print(self.location, self.house_type, self.deal_type, self.price, self.completion_year)
+        
+houses = []
+house1 = House("강남", "아파트", "매매", "10억", "2010년")
+house2 = House("마포", "오피스텔", "전세", "5억", "2007년")
+house3 = House("송파", "빌라", "월세", "500/50", "2000년")
+houses.append(house1)
+houses.append(house2)
+houses.append(house3)
+
+print("총 {0}대의 매물이 있습니다." .format(len(houses)))
+for house in houses:
+    house.show_detail()
+    
+# 예외처리
+try:
+    print("나누기 전용 계산기입니다.")
+    nums = []
+    num1 = int(input("첫 번째 숫자를 입력하세요"))
+    num2 = int(input("두 번째 숫자를 입력하세요"))
+    print("{0} / {1} = {2}".format(num1, num2, int(num1/num2)))
+except ValueError:
+    print("에러! 잘못된 값을 입력")
+except ZeroDivisionError as err:
+    print(err)
+    
+# 모듈
+import theater_module
+
+theater_module.price(3) # 3명이서 영화 보러 갔을 때 가격
+theater_module.price_morning(4)
+theater_module.price_soldier(5)
+
+import theater_module as mv # 별칭을 붙이는 것
+mv.price_soldier(3)
+
+from theater_module import * 
+price_morning(3)
+price(2) 
+
+from theater_module import price, price_morning # 필요한 것만
+price_morning(3)
+price(2) 
+
+from theater_module import price_soldier as price # 필요한 것에 별칭
+price(2)
+
+# 패키지 -> 모듈들을 모아둔 것
+import travel.thailand
+trip_to = travel.thailand.ThailandPackage()
+trip_to.detail()
+
+from travel.thailand import ThailandPackage
+trip_to = ThailandPackage()
+trip_to.detail()
+
+from travel import vietnam
+trip_to = vietnam.VietnamPackage()
+trip_to.detail()
+
+# __all__
+from travel import *
+# trip_to = vietnam.VietnamPackage()
+trip_to = thailand.VietnamPackage()
+trip_to.detail()
+
+import inspect
+import random
+print(inspect.getfile(random)) # 랜덤 모듈의 파일 위치를 알려줌
+
+# 내장 함수 : import 할 필요없이 바로 함수를 사용할 수 있다.
+# input : 사용자 입력을 받는 함수
+# dir : 어떤 객체를 넘겨줬을 때 그 객체가 어떤 변수와 함수를 가지고 있는지 표시
+
+# 중간 Quiz
+'''
+    프로젝트 내에 나만의 시그니처를 남기는 모듈을 만드시오
+    
+    조건 : 모듈 파일명은 byme.py로 작성
+    
+    (모듈 사용 예제)
+    import byme
+    byme.sign()
+    
+    (출력 예제)
+    이 프로그램은 나도코딩에 의해 만들어졌습니다.
+    유튜브 : http://youtube.com
+    이메일 : nadocoding@gmail.com
+'''
+
+import byme
+byme.sign()
