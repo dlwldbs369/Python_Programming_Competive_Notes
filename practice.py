@@ -97,7 +97,9 @@ print(min(5, 12)) # 5
 print(round(3.14)) # 3
 print(round(4.88)) # 5
 
-from math import * # math 모듈 안에 있는 것을 모두 쓰겠다.
+from math import *
+from tkinter.font import names
+from tkinter.tix import Balloon # math 모듈 안에 있는 것을 모두 쓰겠다.
 
 print(floor(4.66)) # 4 내림
 print(ceil(3.14)) # 4 올림
@@ -592,3 +594,427 @@ while customer <= 50 :
         print("{0} {1}번째 손님 (소요시간 : {2}분)" .format("[ ]", customer, time))
     customer += 1
 print("총 탑승 승객 : {0} 분" .format(customer_len))
+
+# 함수
+def open_account():
+    print("새로운 계좌가 생성되었습니다.")
+
+open_account() # 함수 호출
+
+# 전달값과 반환값
+def deposit(balance, money): # 입금
+    print("입금이 완료되었습니다. 잔액은 {0}원 입니다." .format(balance+money))
+    return balance + money
+
+def withdraw(balance, money): # 출금
+    if balance >= money : # 잔액이 출금보다 많으면
+        print("출금이 완료되었습니다. 잔액은 {0} 원입니다." .format(balance - money))
+        return balance - money
+    else :
+        print("출금이 완료되지 않았습니다. 잔액은 {0}원입니다." .format(balance))
+        return balance
+    
+def withdraw_night(balance, money) : # 저녁에 출금
+    commission = 100 # 수수료
+    return commission , balance - money - commission
+
+balance = 0 # 잔액
+balance = deposit(balance, 1000)
+balance = withdraw(balance, 2000) # 출금되지 않음
+comission, balance = withdraw_night(balance, 500)
+print("수수료 {0}원 이며, 잔액은 {1} 원입니다." .format(comission, balance))
+ 
+# def profile(name, age, main_lang) :
+#     print("이름 : {0}\t나이 : {1}\t 주 사용 언어 : {2}" \
+#         .format(name, age, main_lang))
+    
+# profile("유재석", 20, "파이썬")
+# profile("김태호", 25, "자바")
+
+# 같은 학교 같은 학년 같은 반 같은 수업일 경우
+# 기본값을 사용 
+def profile(name, age = 17, main_lang = "파이썬") :
+    print("이름 : {0}\t나이 : {1}\t 주 사용 언어 : {2}" \
+        .format(name, age, main_lang))
+
+profile("유재석")
+profile("김태호")
+
+# 키워드 값을 이용한 함수 호출
+def profile(name, age, main_lang) :
+    print("이름 : {0}\t나이 : {1}\t 주 사용 언어 : {2}" \
+        .format(name, age, main_lang))
+    
+profile(name = "유재석", main_lang = "파이썬", age = 20)
+
+# 가변인자
+# def profile(name, age, lan1, lan2, lan3, lan4, lan5):
+#     print("이름 : {0}\t 나이 : {1}\t" .format(name, age), end = " ")
+#     print(lan1, lan2, lan3, lan4, lan5)
+    # end = " " 를 통해 두 개의 프린트 문장이 한 문장으로 출력된다.
+    # 줄바꿈을 하지 않기 위해 쓰는 것.
+# profile("유재석", 20, "python", "java", "c", "c++", "c#")
+# profile("김태호", 25, "kotlin", "Swift", "", "", "")
+''' 유재석 학생이 할 줄 언어가 늘었다면 ? 함수의 매개인자를 수정해야한다.
+ 하지만 그렇게 하면 유지보수가 힘들어 가변인자를 사용한다.
+ '''
+ 
+def profile(name, age, *language):
+    print("이름 : {0}\t 나이 : {1}\t" .format(name, age), end = " ")
+    for lang in language:
+        print(lang, end = " ")
+    print()
+    
+profile("유재석", 20, "python", "java", "c", "c++", "c#", "Javascript")
+profile("김태호", 25, "kotlin", "Swift")
+
+# 지역변수와 전역변수
+
+gun = 10
+
+# def checkpoint(soldiers) : #경계근무
+#     gun = gun - soldiers 
+'''
+    gun에서 오류 발생
+    함수 내에 있는 gun은 밖에 있는 gun이 아닌 함수 내에서 사용하는
+    변수 이므로 할당이 되지 않았기 때문에 오류가 발생
+'''
+#     print("[함수 내] 남은 총 : {0}" .format(gun))
+    
+    
+def checkpoint(soldiers) : #경계근무
+    global gun # 전역 공간에 있는 gun 사용
+    gun = gun - soldiers
+    print("[함수 내] 남은 총 : {0}" .format(gun))
+    
+print("전체 총 : {0}" .format(gun))
+checkpoint(2)
+print("남은 총 : {0}" .format(gun))
+
+'''
+    전역변수를 많이 사용하면 코드 관리가 어려워 
+    권장되지 않는다.
+    전달값과 반환값을 통해 작성하는 것이 좋다
+'''
+
+def checkpoint_ret(gun, soldiers) : #경계근무
+    gun = gun - soldiers
+    print("[함수 내] 남은 총 : {0}" .format(gun))
+    return gun
+    
+print("전체 총 : {0}" .format(gun))
+gun = checkpoint_ret(gun, 2)
+print("남은 총 : {0}" .format(gun))
+
+# 중간 Quiz
+'''
+    표준 체중을 구하는 프로그램을 작성하시오
+    
+    * 표준 체중 : 각 개인의 키에 적당한 체중
+    
+    (성별에 따른 공식)
+    남자 : 키(m) x 키(m) x 22
+    여자 : 키(m) x 키(m) x 21
+    
+    조건1 : 표준 체중은 별도의 함수 내에서 작성
+        * 함수명 : std_weight
+        * 전달값 : 키(height), 성별(gender)
+    조건2 : 표준 체중은 소수점 둘째자리까지 표시
+    
+    (출력 예제)
+    키 175cm 남자의 표준 체중은 67.38kg입니다.
+'''
+
+def std_weight(height, gender):
+    if gender == "여자" :
+        return height * height * 21 
+    else :
+        return height * height * 22
+
+height = 175
+gender = "남자"
+weight = round(std_weight(height / 100 , gender),2)
+print("키 {0}cm {1}의 표준 체중은 {2}kg 입니다." .format(height, gender ,weight))
+
+# 표준입출력
+print("python", "java", sep = ",")
+print("python", "java", sep = " vs ")
+print("python", "java", sep = ",", end = "?")
+print("무엇이 더 재밌을까요?")
+
+import sys
+print("Python", "Java", file = sys.stdout) # 표준 출력
+print("Python", "Java", file = sys.stderr) # 표준 에러
+
+scores = {"수학" : 0, "영어" : 50, "코딩" : 100}
+for subject, score in scores.items():
+    # print(subject, score)
+    print(subject.ljust(8), str(score).rjust(4), sep = ":")
+    
+# 은행 대기순번표
+# 001, 002, 003, ...
+for num in range(1, 21) :
+    print("대기번호 : " + str(num).zfill(3))
+    # 3자리를 확보하는데 값이 안들어가는 자리는 0으로 채우는 것
+     
+answer = input("아무 값이나 입력하세요 : ")
+print("입력하신 값은" + answer + "입니다.")
+
+# 다양한 출력포맷
+# 빈 자리는 빈공간으로 두고, 오른쪽 정렬을 하되, 총 10자리 공간을 차지
+print("{0: >10}" .format(500)) # -500이라고 적으면 -500이라고 나오지만 500이라고 하면 그냥 500으로 나온다.
+# 출력 값 :          500  
+# 양수일 땐 +로 표시, 음수일 땐 -로 표시
+print("{0: >+10}" .format(500)) # +500
+
+# 왼쪽 정렬하고, 빈칸으로 _채움
+print("{0:_<+10}" .format(500))
+# 3자리마다 콤마를 찍어주기
+print("{0:,}".format(1000000000))
+# 3자리마다 콤마를 찍어주기, +-부호도 붙이기
+print("{0:+,}".format(1000000000))
+# 3자리마다 콤마를 찍어주되 부호도 붙이고 자리수도 확보
+# 돈이 많으면 행복하니 빈 자리는 ^ 채우기
+print("{0:^<+30,}".format(10000000000))
+# 소수점 출력
+print("{0:f}" .format(5/3)) #1.666667
+# 소수점 특정 자리수 까지만 표시
+print("{0:.2f}".format(5/3))
+
+# 파일입출력
+score_file = open("score.txt","w",encoding="utf8")
+print("수학 : 0", file = score_file)
+print("영어 : 50", file = score_file)
+score_file.close()
+
+score_file = open("score.txt", "a", encoding="utf8") #파일 불러와서 내용 덧붙이기
+score_file.write("과학 : 80")
+score_file.write("\n코딩 : 100")
+
+score_file = open("score.txt", "r", encoding="utf8")
+print(score_file.read()) # 파일의 모든 내용을 불러옴
+score_file.close()
+
+score_file = open("score.txt","r",encoding="utf8")
+print(score_file.readline(), end = "") # 줄별로 읽기, 한 줄 읽고 커서는 다음 줄로 이동
+print(score_file.readline(), end = "") # 줄별로 읽기, 한 줄 읽고 커서는 다음 줄로 이동
+print(score_file.readline(), end = "") # 줄별로 읽기, 한 줄 읽고 커서는 다음 줄로 이동
+print(score_file.readline(), end = "") # 줄별로 읽기, 한 줄 읽고 커서는 다음 줄로 이동
+score_file.close()
+
+score_file = open("score.txt","r",encoding="utf8")
+while True:
+    line = score_file.readline()
+    if not line:
+        break
+    print(line, end = "")
+score_file.close() 
+
+score_file = open("score.txt","r",encoding="utf8")
+lines = score_file.readlines() # list형태로 저장
+for line in lines:
+    print(line, end = "")
+score_file.close()
+
+# pickle -> 프로그램 상에서 사용하고 있는 데이터를 파일로 저장하는 것
+import pickle
+# pickle을 쓰기 위해 바이너리로 써야한다. 인코딩은 따로 설정할 필요없다
+profile_file = open("profile.pickle","wb")
+profile = {"이름" : "박명수", "나이" : 20, "취미" : ["축구","골프 ","코딩"]}
+print(profile)
+pickle.dump(profile, profile_file) #profile에 있는 정보를 file에 저장
+profile_file.close()
+
+profile_file = open("profile.pickle", "rb")
+profile = pickle.load(profile_file) # file에 있는 정보를 profile에 불러오기
+print(profile)
+profile_file.close()
+
+# with
+import pickle
+# close를 해줄 필요가 없음
+with open("profile.pickle", "rb") as profile_file:
+    print(pickle.load(profile_file))
+    
+with open("study.txt", "w", encoding= "utf8") as study_file:
+    study_file.write("파이썬을 공부하고있어요")
+    
+with open("study.txt", "r", encoding="utf8") as study_file:
+    print(study_file.read())
+    
+# 중간 Quiz
+'''
+    당신의 회사에서는 매주 1회 작성해야 하는 보고서가 있다
+    보고서는 항상 아래와 같은 형태로 출력되어야 한다.
+    
+    -X 주차 주간보고-
+    부서 :
+    이름 :
+    업무 요약 :
+    
+    1주차부터 50주차까지의 보고서 파일을 만드는 프로그램을 작성
+    
+    조건 : 파일명은 '1주차.txt', '2주차.txt', ... 와 같이 만든다
+'''
+
+for i in range(1, 51):
+    document_file = open(f"{i}주차.txt", "w", encoding= "utf8")
+    print(f" - {i}주차 주간보고 - \n부서 : \n이름 : \n업무 요약 : " , file = document_file)
+    document_file.close()
+    
+# class
+# 마린 : 공격 유닛, 군인, 총을 쏠 수 있음
+name = "마린"
+hp = 40
+damage = 5
+
+print("{} 유닛이 생성되었습니다." .format(name))
+print("체력 {0}, 공격력 {1}\n" .format(hp, damage))
+
+# 탱크 : 공격 유닛, 탱크, 포를 쓸 수 있는데 일반모드 / 시즈 모드
+tank_name = "탱크"
+tank_hp = 150
+tank_damage = 35
+
+print("{} 유닛이 생성되었습니다." .format(tank_name))
+print("체력 {0}, 공격력 {1}\n" .format(tank_hp, tank_damage))
+
+def attack(name, location, damage) :
+    print("{0} : {1} 방향으로 적군을 공격합니다. 공격력 {2}]" \
+        .format(name, location, damage))
+    
+attack(name , "1시", damage)
+attack(tank_name , "1시", tank_damage)
+# 만약 유닛이 더 늘어난다면 또 유닛을 생성해야함.
+# 쉽게 생성될 수 있게 클래스를 사용함.
+# 클래스는 붕어빵 틀이라고 생각 
+# 틀은 하나인데 무한개 만들 수 있다.
+
+# 위에 한 것을 클래스 부분으로 만들어보자
+class Unit:
+    def __init__(self, name, hp, damage):
+        self.name = name
+        self.hp = hp
+        self.damage = damage
+        print("{} 유닛이 생성되었습니다." .format(self.name))
+        print("체력 {0}, 공격력 {1}\n" .format(self.hp, self.damage))
+        
+marine1 = Unit("마린", 40, 5)
+marine2 = Unit("마린", 40, 5)
+tank = Unit("탱크", 150, 35)
+
+# __init__ -> 파이썬에서 쓰이는 생성자
+# 객체가 만들어질때 호출되는 함수
+
+# 레이스 : 공중 유닛, 비행기, 클로킹(상대방에게 보이지 않음)
+wraith1 = Unit("레이스", 80, 5)
+print("유닛 이름 : {0}, 공격력 : {1}" .format(wraith1.name, wraith1.damage))
+# 이렇게 멤버변수를 통해 클래스 안에 있는 변수에 접근할 수 있다.
+
+# 마인트 컨트롤 : 상대방 유닛이 내 것으로 만드는 것(빼앗음)
+wraith2 = Unit("빼앗은 레이스", 80, 5)
+wraith2.clocking = True # 기능 업그레이드라 가정
+# 외부에서 변수를 추가로 할당한 것
+# wraith1에는 clocking이 없다!!!!!!!
+if wraith2.clocking == True :
+    print("{0} 는 현재 클로킹 상태입니다." .format(wraith2.name))
+
+
+# 메소드
+
+# 공격 유닛
+class AttackUnit:
+    def __init__(self, name, hp, damage):
+        self.name = name
+        self.hp = hp
+        self.damage = damage
+        
+    def attack(self, location):
+        print("{0} : {1} 방향으로 적군을 공격한다 [공격력 {2}]"\
+            .format(self.name, location, self.damage))
+    
+    def damaged(self, damage) :
+        print("{0} : {1} 데미지를 입었습니다." .format(self.name, damage))
+        self.hp -= damage
+        print("{0} : 현재 체력은 {1}입니다." .format(self.name, self.hp))
+        if self.hp <= 0:
+            print("{0} : 파괴되었습니다." .format(self.name))
+            
+
+# 파이어뱃 : 공격 유닛, 화염방사기
+firebat1 = AttackUnit("파이어뱃", 50 , 16)
+firebat1.attack("5시")
+
+# 공격 2번 받는다고 가정
+firebat1.damaged(25)
+firebat1.damaged(25)
+
+# 상속
+# 위 클래스 예제를 다시 들어 상속을 해보자
+
+class Unit:
+    def __init__(self, name, hp, speed):
+        self.name = name
+        self.hp = hp
+        self.speed  = speed
+        
+    def move(self, location):
+        print("[지상 유닛 이동]")
+        print("{0} : {1} 방향으로 이동합니다. [속도 {2}]" \
+            .format(self.name, location, self.speed))
+        
+class AttackUnit(Unit): # 상속
+    def __init__(self, name, hp, damage, speed):
+        # self.name = name # 위 클래스와 겹침
+        # self.hp = hp # 위 클래스와 겹침
+        Unit.__init__(self, name, hp, speed)
+        self.damage = damage
+        
+    def attack(self, location):
+        print("{0} : {1} 방향으로 적군을 공격한다 [공격력 {2}]"\
+            .format(self.name, location, self.damage))
+    
+    def damaged(self, damage) :
+        print("{0} : {1} 데미지를 입었습니다." .format(self.name, damage))
+        self.hp -= damage
+        print("{0} : 현재 체력은 {1}입니다." .format(self.name, self.hp))
+        if self.hp <= 0:
+            print("{0} : 파괴되었습니다." .format(self.name))    
+            
+# 드랍쉽 : 공중 유닛, 수송기, 마린/ 파이어뱃/ 탱크 등을 수송, 공격 기능 x
+class Flyable :
+    def __init__(self, flying_speed):
+        self.flying_speed = flying_speed
+        
+    def fly(self, name, location) :
+        print("{0} : {1} 방향으로 날아갑니다.[속도 {2}]" \
+            .format(name, location, self.flying_speed))
+        
+# 공중 공격 유닛 클래스
+# 다중 상속
+class FlyableAttackUnit(AttackUnit, Flyable):
+    def __init__(self, name, hp, damage, flying_speed):
+        AttackUnit.__init__(self, name, hp, 0, damage)
+        # 지상 스피드는 0
+        Flyable.__init__(self, flying_speed)
+    
+    def move(self, location):
+        print("공중 유닛 이동")
+        self.fly(self.name, location)
+        
+# 발키리 : 공중 공격 유닛, 한번에 14발 미사일 발사
+valkyrie = FlyableAttackUnit("발키리", 200, 6, 5)
+valkyrie.fly(valkyrie.name, "3시")
+
+# 메소드 오버라이딩
+# 벌쳐 : 지상 유닛, 기동성이 좋음
+valture = AttackUnit("벌쳐", 80, 10, 20)
+
+# 배틀크루저 : 공중 유닛, 체력도 굉장히 좋음, 공격력도 좋음
+battlecruiser = FlyableAttackUnit("배틀크루저", 500, 25, 3)
+valture.move("11시")
+# battlecruiser.fly(battlecruiser.name, "9시")
+battlecruiser.move(battlecruiser.name, "9시")
+
+# pass
+# 건물
